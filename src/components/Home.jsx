@@ -1,10 +1,8 @@
 import React from 'react';
-
+import './home.css'
 const Home = () => {
     return (
-        <div>
-            Es el home
-        </div>
+        <h1>Este es el home, se haran las consultas sobre el estado de los pedidos</h1>
     );
 };
 

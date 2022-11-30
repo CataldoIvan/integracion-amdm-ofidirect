@@ -22,7 +22,9 @@ const ImpotExcel = () => {
 
   const handleSend = (e) => {
     e.preventDefault();
-    let userPass=btoa("191918:fw3vLr&lLVER")
+    //console.log(JSON.stringify(rows));
+    try {
+      let userPass=btoa("191918:fw3vLr&lLVER")
     console.warn("🚀 ~ file: ImpotExcel.jsx ~ line 26 ~ handleSend ~ userPass", userPass)
    
     console.log();
@@ -36,9 +38,26 @@ const ImpotExcel = () => {
       
       body: JSON.stringify(rows),
     })
-      .then((res) => res.json())
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+      .then((res) => {
+        console.dir(res);
+        if(res.status==200 || res.status==201){
+          return res.json()
+        }else{
+      throw(res)
+          
+        }
+      })
+      .then((res) => null/* console.dir(res) */
+      )
+      /* .catch((err) => {console.log("entro en el eror"+err)
+      throw(err)
+    }); */
+    } catch (error) {
+      console.log("acaaaa");
+        console.dir(error)
+    }
+
+    
   };
   const handleSelect = (e) => {
     setSheetSelected(e.target.value);
@@ -59,61 +78,62 @@ const ImpotExcel = () => {
         jsonData.push({
           ...dato,
 
-          idTransaccion: String(dato.idTransaccion || "-"),
-          idCliente: String(dato.idCliente || "-"),
-          remito: String(dato.remito || "-"),
-          fecha: String(
+          'idTransaccion': String(dato.idTransaccion || "-"),
+          'idCliente': String(dato.idCliente || "-"),
+          'remito': String(dato.remito || "-"),
+          'fecha': String(
             new Date((dato.fecha - (25567+2)) * 86400 * 1000)
               .toISOString()
               .slice(0, -5)
               .split("T") || "-"
           ),
-          nroCalleDestino: String(dato.nroCalleDestino) || "-",
-          codigoPostalDestino: String(dato.codigoPostalDestino || "-"),
-          Observaciones: String(dato.Observaciones || "-"),
+          'nroCalleDestino': String(dato.nroCalleDestino) || "-",
+          'codigoPostalDestino': String(dato.codigoPostalDestino || "-"),
+          'Observaciones': String(dato.Observaciones || "-"),
           observacionesAdicionalesDestino: String(
             dato.observacionesAdicionalesDestino || "-"
           ),
-          telefono1: String(dato.telefono1 || "-"),
-          telefono2: String(dato.telefono2 || "-"),
-          telefono3: String(dato.telefono3 || "-"),
-          cantUnidades: String(dato.cantUnidades || "-"),
-          cantM3: String(dato.cantM3 || "-"),
-          cantKg: String(dato.cantKg || "-"),
-          cantValorDeclarado: String(dato.cantValorDeclarado || "-"),
-          contrareembolso: String(dato.contrareembolso || "-"),
-          latitud: String(dato.latitud || "-"),
-          longitud: String(dato.longitud || "-"),
+          'telefono1': String(dato.telefono1 || "-"),
+          'telefono2': String(dato.telefono2 || "-"),
+          'telefono3': String(dato.telefono3 || "-"),
+          'cantUnidades': String(dato.cantUnidades || "-"),
+          'cantM3': String(dato.cantM3 || "-"),
+          'cantKg': String(dato.cantKg || "-"),
+          'cantValorDeclarado': String(dato.cantValorDeclarado || "-"),
+          'contrareembolso': String(dato.contrareembolso || "-"),
+          'latitud': String(dato.latitud || "-"),
+          'longitud': String(dato.longitud || "-"),
         });
       } else {
         jsonData.push({
           ...dato,
 
-          idTransaccion: String(dato.idTransaccion || "-"),
-          idCliente: String(dato.idCliente || "-"),
-          remito: String(dato.remito || "-"),
-          nroCalleDestino: String(dato.nroCalleDestino) || "-",
-          codigoPostalDestino: String(dato.codigoPostalDestino || "-"),
-          Observaciones: String(dato.Observaciones || "-"),
-          observacionesAdicionalesDestino: String(
+          'idTransaccion': String(dato.idTransaccion || "-"),
+          'idCliente': String(dato.idCliente || "-"),
+          'remito': String(dato.remito || "-"),
+          'nroCalleDestino': String(dato.nroCalleDestino) || "-",
+          'codigoPostalDestino': String(dato.codigoPostalDestino || "-"),
+          'Observaciones': String(dato.Observaciones || "-"),
+          'observacionesAdicionalesDestino': String(
             dato.observacionesAdicionalesDestino || "-"
           ),
-          telefono1: String(dato.telefono1 || "-"),
-          telefono2: String(dato.telefono2 || "-"),
-          telefono3: String(dato.telefono3 || "-"),
-          cantUnidades: String(dato.cantUnidades || "-"),
-          cantM3: String(dato.cantM3 || "-"),
-          cantKg: String(dato.cantKg || "-"),
-          cantValorDeclarado: String(dato.cantValorDeclarado || "-"),
-          contrareembolso: String(dato.contrareembolso || "-"),
-          latitud: String(dato.latitud || "-"),
-          longitud: String(dato.longitud || "-"),
+          'telefono1': String(dato.telefono1 || "-"),
+          'telefono2': String(dato.telefono2 || "-"),
+          'telefono3': String(dato.telefono3 || "-"),
+          'cantUnidades': String(dato.cantUnidades || "-"),
+          'cantM3': String(dato.cantM3 || "-"),
+          'cantKg': String(dato.cantKg || "-"),
+          'cantValorDeclarado': String(dato.cantValorDeclarado || "-"),
+          'contrareembolso': String(dato.contrareembolso || "-"),
+          'latitud': String(dato.latitud || "-"),
+          'longitud': String(dato.longitud || "-"),
         });
       }
     }
 
-    console.log(jsonData);
+    
 
+    //setRows(JSON.stringify(jsonData));
     setRows(jsonData);
   };
   const handleFile = async (e) => {
