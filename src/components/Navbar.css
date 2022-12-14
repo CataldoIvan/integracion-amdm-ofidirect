@@ -1,0 +1,8 @@
+.navbar{
+    background-color: red;
+    width: 100%
+    
+}
+.navbar a,img{
+    margin: 0 30px;
+}

@@ -17,7 +17,7 @@ const Home = () => {
           
     }
     return (<>
-        <h1>Este es el home, se haran las consultas sobre el estado de los pedidos</h1>
+        <h1>Este es el home, se veran los estado de los pedidos enviados</h1>
         <input type="text" onChange={(e)=>setFecha(e.target.value)}/>
         <input type="button" value="encviar" onClick={hanbleclick} />
     </>

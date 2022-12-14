@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { json } from "react-router-dom";
 import axios, { isCancel, AxiosError } from "axios";
 import * as XLSX from "xlsx";
+import toast, { Toaster } from 'react-hot-toast';
 
 const ImpotExcel = () => {
   const [namesOfSheets, setNamesOfSheets] = useState([]);
@@ -12,9 +13,13 @@ const ImpotExcel = () => {
   const [rows, setRows] = useState(null);
   const [header, setHeader] = useState(null);
   const [excel, setExcel] = useState();
+  const [errores, setErrores] = useState([]);
+  const [confir, setConfir] = useState({});
+  
 
   useEffect(() => {
     console.log(rows);
+    console.log("errores", errores);
     if (rows) {
       let resul = Object.keys(rows[0]);
       setHeader(resul);
@@ -24,14 +29,15 @@ const ImpotExcel = () => {
 
   const handleSend = (e) => {
     e.preventDefault();
+    
     console.log(JSON.stringify(rows));
     try {
       let userPass = btoa("191918:fw3vLr&lLVER");
-      console.warn(
+      /*  console.warn(
         "🚀 ~ file: ImpotExcel.jsx ~ line 26 ~ handleSend ~ userPass",
         `Basic ${userPass}`
-      );
-     
+      ); */
+
       let customHeader = new Headers();
       customHeader.append("authorization", `Basic ${userPass}`);
       customHeader.append("Access-Control-Allow-Origin", "*");
@@ -52,37 +58,55 @@ const ImpotExcel = () => {
       customHeader.append("Transfer-Encoding", "chunked");
       customHeader.append("Date", "Tue, 13 Dec 2022 20:08:59 GMT");
 
-      for (var i = 0; i <= (rows.length-1); i++) {
-        var tick = function(i) {
-            return function() {
-              axios
+      for (var i = 0; i <= rows.length - 1; i++) {
+        var tick = function (i) {
+          return function () {
+           
+            axios
               .post(
                 "http://app.amdmconsultora.com:80/amdm/servlet/ImportacionClienteOfidirectWs",
                 JSON.stringify([rows[i]]),
-                {"headers" : customHeader}
+                { headers: customHeader }
               )
               .then((res) => {
                 console.log("RESPONSE RECEIVED: ", res);
                 console.log(res.data[0]);
+                toast.success(`creado correctamente! Remito: ${res.data[0].idTransaccion}`,{
+               duration: 3000,
+               position: 'bottom-right'});
+               localStorage.setItem(res.data[0].idTransaccion,res.data[0].mensaje)
               })
               .catch((err) => {
-                console.log("AXIOS ERROR: ", err);
-                console.log("el Remito:", err.response.data[0].idTransaccion," Tiene el error:",err.response.data[0].mensaje);
-                console.log(err.config.data);
+                // console.log("AXIOS ERROR: ", err);
+                console.log(
+                  "el Remito:",
+                  err.response.data[0].idTransaccion,
+                  " Tiene el error:",
+                  err.response.data[0].mensaje
+                );
                 
-              });
-            }
+                localStorage.setItem(err.response.data[0].idTransaccion,err.response.data[0].mensaje)
+                toast.error(`Hubo un error :( , Remmito:${err.response.data[0].idTransaccion}`,{
+                  duration: 3000,
+                  position: 'bottom-right'});
+                
+              })
+          };
         };
         setTimeout(tick(i), 2000 * i);
-    }
+      }
       
+
+    
     } catch (error) {
       console.log("acaaaa");
       console.dir("ksnd" + error);
     }
   };
+  
   const handleSelect = (e) => {
     setSheetSelected(e.target.value);
+    
 
     const data = XLSX.utils.sheet_to_json(excel.Sheets[e.target.value], {
       defval: null,
@@ -134,15 +158,14 @@ const ImpotExcel = () => {
           latitud: String(dato.latitud || "-"),
           longitud: String(dato.longitud || "-"),
         });
-      } 
+      }
     }
 
-    
     setRows(jsonData);
   };
   const handleFile = async (e) => {
     e.preventDefault();
-   
+
     const file = e.target.files[0];
     const data = await file.arrayBuffer();
     const res = XLSX.readFile(data, { type: "base64" });
@@ -154,6 +177,7 @@ const ImpotExcel = () => {
     setExcel(res);
     setNamesOfSheets(res.SheetNames);
   };
+  const notify  = () => toast('Here is your toast.');
   return (
     <div className="content">
       <button
@@ -165,6 +189,7 @@ const ImpotExcel = () => {
           setRows();
           setExcel();
           setHeader();
+          setErrores();
         }}
       >
         Limpiar
@@ -219,6 +244,7 @@ const ImpotExcel = () => {
           })}
         </tbody>
       </table>
+      <Toaster />
       <script crossorigin src="..."></script>
     </div>
   );
