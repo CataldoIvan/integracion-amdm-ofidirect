@@ -31,28 +31,7 @@ const ImpotExcel = () => {
         "🚀 ~ file: ImpotExcel.jsx ~ line 26 ~ handleSend ~ userPass",
         `Basic ${userPass}`
       );
-
-      let url =
-        "http://app.amdmconsultora.com:80/amdm/servlet/ImportacionClienteOfidirectWs";
-      /* axios(url, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Authorization': `Bearer Basic ${userPass}`,
-          'Access-Control-Allow-Methods': "GET, POST, PUT, OPTIONS",
-          'Access-Control-Allow-Origin':"*",
-          "Access-Control-Allow-Headers":"*", 
-          'Content-Type': 'application/json',
-       
-        },
-        withCredentials: false,
      
-        body: JSON.stringify(rows)
-      }).then(response => {
-        console.log(response);
-      }).catch(err=>console.log(err)) */
-
-      console.log();
       let customHeader = new Headers();
       customHeader.append("authorization", `Basic ${userPass}`);
       customHeader.append("Access-Control-Allow-Origin", "*");
@@ -72,119 +51,31 @@ const ImpotExcel = () => {
       customHeader.append("Content-Type", "application/json");
       customHeader.append("Transfer-Encoding", "chunked");
       customHeader.append("Date", "Tue, 13 Dec 2022 20:08:59 GMT");
-      /* customHeader.append("dataType", "json");
-      customHeader.append("Content-Type", "30099");
-      customHeader.append("Accept", "application/json");
-      customHeader.append("Content-Type", "application/json; charset=utf-8");
-      customHeader.append("Access-Control-Allow-Origin", "*");
-      customHeader.append("Access-Control-Allow-Headers", "*");
-      customHeader.append("sec-fetch-site", "same-site");
-      customHeader.append("sec-fetch-mode", "cors");
-      customHeader.append(
-        "Accept-Language",
-        "es-AR, fr;q=0.9, en;q=0.8, de;q=0.7"
-      );
-      customHeader.append("accept-encoding", "gzip,deflate,br");
 
-      customHeader.append(
-        "Access-Control-Allow-Origin",
-        "http://localhost:5173/integracion-amdm-ofidirect/"
-      );
-      customHeader.append(
-        "Access-Control-Allow-Methods",
-        "DELETE, POST, GET, OPTIONS"
-      ); */
-      /* customHeader.append("Access-Control-Allow-Headers", "X-Requested-With");
-
-      console.table(customHeader);
- */
-
-      let axiosConfig = {
-        Authorization: `Basic ${userPass}`,
-        "Access-Control-Allow-Origin":'*',
-        headers: {
-          Accept: "application/json;charset=utf-8",
-        },
-      };
-      console.log(rows)
-      axios
-        .post(
-          "http://app.amdmconsultora.com:80/amdm/servlet/ImportacionClienteOfidirectWs",
-          JSON.stringify(rows),
-          {"headers" : customHeader}
-        )
-        .then((res) => {
-          console.log("RESPONSE RECEIVED: ", res);
-          console.log(res.data[0]);
-        })
-        .catch((err) => {
-          console.log("AXIOS ERROR: ", err);
-          console.log(err.config.data);
-        });
-      /* fetch(
-        "http://app.amdmconsultora.com:80/amdm/servlet/ImportacionClienteOfidirectWs",
-        {
-          mode: 'no-cors',
-          customHeader, */
-      /* headers: {
-            "Authorization":`Basic `+userPass,
-            'Accept': 'application/json, text/plain,',
-            'Content-Type': 'application/json; charset=utf-8',
-            "Access-Control-Allow-Headers": "*",
-            "Access-Control-Allow-Origin":"*",
-            "Access-Control-Allow-Origin":"http://localhost:5173/ImportarDesdeExcel",
-            "Access-Control-Allow-Methods":"DELETE, POST, GET, OPTIONS"
-          },  */
-      /*   method: "POST",
-          body: JSON.stringify({
-            idTransaccion:"15",
-            idCliente:"idOfidirect",
-            remito:"20225",
-            fecha:"2022-10-01 00:00:00",
-            nombreDestinatario:"Bosack Federico",
-            calleDestino:"Garibaldi",
-            nroCalleDestino:"186",
-            Observaciones:"Piso: Dto:2",
-            observacionesAdicionalesDestino:"-",
-            localidadDestino:"Villa Carlos Paz",
-            codigoPostalDestino:"5152",
-            telefono1:"3513070584",
-            telefono2:"-",
-            telefono3:"-",
-            correoDestinatario:"sadorno97@gmail.com",
-            cantUnidades:"-",
-            cantM3:"5",
-            cantKg:"9",
-            cantValorDeclarado:"3305",
-            contrareembolso:"-",
-            latitud:"-",
-            longitud:"-",
-            observaciones:"-",
-            direccionAlternativa:"-",
-            provinciaDestino:"-"
-         }), */
-      /*    headers: {
-          "Authorization":`Basic ${userPass}`,
-          "Access-Control-Allow-Credentials":"true",
-          "Access-Control-Allow-Methods":"GET, POST, PUT, OPTIONS",
-          "Access-Control-Allow-Headers": "*",
-          "Access-Control-Allow-Origin":"http://app.amdmconsultora.com:80/amdm/servlet/ImportacionClienteOfidirectWs",
-          "Content-Type": "application/json",
-           'Access-Control-Allow-Origin': '*'
-        },  */
-      /* body: JSON.stringify(rows), */
-      /*   }
-      )
-        .then((res) => {
-          console.log(res)
-          return res.json();
-        })
-        .then((res) => console.log(res))
-        .catch((err) => {
-          console.log("entro en el eror" + err);
-          console.log(err);
-          throw err;
-        }); */
+      for (var i = 0; i <= (rows.length-1); i++) {
+        var tick = function(i) {
+            return function() {
+              axios
+              .post(
+                "http://app.amdmconsultora.com:80/amdm/servlet/ImportacionClienteOfidirectWs",
+                JSON.stringify([rows[i]]),
+                {"headers" : customHeader}
+              )
+              .then((res) => {
+                console.log("RESPONSE RECEIVED: ", res);
+                console.log(res.data[0]);
+              })
+              .catch((err) => {
+                console.log("AXIOS ERROR: ", err);
+                console.log("el Remito:", err.response.data[0].idTransaccion," Tiene el error:",err.response.data[0].mensaje);
+                console.log(err.config.data);
+                
+              });
+            }
+        };
+        setTimeout(tick(i), 2000 * i);
+    }
+      
     } catch (error) {
       console.log("acaaaa");
       console.dir("ksnd" + error);
@@ -221,20 +112,20 @@ const ImpotExcel = () => {
               .join(" ")
           ),
           nombreDestinatario: String(dato.nombreDestinatario || "-"),
+          correoDestinatario: String(dato.correoDestinatario || "-"),
           calleDestino: String(dato.calleDestino),
           nroCalleDestino: String(dato.nroCalleDestino) || "-",
           codigoPostalDestino: String(dato.codigoPostalDestino || "-"),
+          localidadDestino: String(dato.localidadDestino || "-"),
+          provinciaDestino: String(dato.provinciaDestino || "-"),
+          direccionAlternativa: String(dato.direccionAlternativa || "-"),
           observaciones: String(dato.observaciones || "-"),
           observacionesAdicionalesDestino: String(
             dato.observacionesAdicionalesDestino || "-"
           ),
-          direccionAlternativa: String(dato.direccionAlternativa || "-"),
-          localidadDestino: String(dato.localidadDestino || "-"),
-          provinciaDestino: String(dato.provinciaDestino || "-"),
           telefono1: String(dato.telefono1 || "-"),
           telefono2: String(dato.telefono2 || "-"),
           telefono3: String(dato.telefono3 || "-"),
-          correoDestinatario: String(dato.correoDestinatario || "-"),
           cantUnidades: String(dato.cantUnidades || "-"),
           cantM3: String(dato.cantM3 || "-"),
           cantKg: String(dato.cantKg || "-"),
@@ -243,44 +134,15 @@ const ImpotExcel = () => {
           latitud: String(dato.latitud || "-"),
           longitud: String(dato.longitud || "-"),
         });
-      } /* else {
-        jsonData.push({
-          ...dato,
-          idTransaccion: String(dato.idTransaccion || "-"),
-          idCliente: String(dato.idCliente || "-"),
-          remito: String(dato.remito || "-"),
-          nombreDestinatario: String(dato.nombreDestinatario || "-"),
-          nroCalleDestino: String(dato.nroCalleDestino) || "-",
-          calleDestino: String(dato.calleDestino) || "-",
-          codigoPostalDestino: String(dato.codigoPostalDestino || "-"),
-          Observaciones: String(dato.Observaciones || "-"),
-          observacionesAdicionalesDestino: String(
-            dato.observacionesAdicionalesDestino || "-"
-          ),
-          direccionAlternativa: String(dato.direccionAlternativa || "-"),
-          localidadDestino: String(dato.localidadDestino || "-"),
-          provinciaDestino: String(dato.provinciaDestino || "-"),
-          telefono1: String(dato.telefono1 || "-"),
-          telefono2: String(dato.telefono2 || "-"),
-          telefono3: String(dato.telefono3 || "-"),
-          correoDestinatario: String(dato.correoDestinatario || "-"),
-          cantUnidades: String(dato.cantUnidades || "-"),
-          cantM3: String(dato.cantM3 || "-"),
-          cantKg: String(dato.cantKg || "-"),
-          cantValorDeclarado: String(dato.cantValorDeclarado || "-"),
-          contrareembolso: String(dato.contrareembolso || "-"),
-          latitud: String(dato.latitud || "-"),
-          longitud: String(dato.longitud || "-"),
-        });
-      } */
+      } 
     }
 
-    //setRows(JSON.stringify(jsonData));
+    
     setRows(jsonData);
   };
   const handleFile = async (e) => {
     e.preventDefault();
-    //console.dir(e.target.files[0]);
+   
     const file = e.target.files[0];
     const data = await file.arrayBuffer();
     const res = XLSX.readFile(data, { type: "base64" });
@@ -293,7 +155,7 @@ const ImpotExcel = () => {
     setNamesOfSheets(res.SheetNames);
   };
   return (
-    <div>
+    <div className="content">
       <button
         className="btn btn-danger"
         onClick={(e) => {
