@@ -14,6 +14,7 @@ const ImpotExcel = () => {
   const [excel, setExcel] = useState();
 
   useEffect(() => {
+    console.log(rows);
     if (rows) {
       let resul = Object.keys(rows[0]);
       setHeader(resul);
@@ -54,7 +55,24 @@ const ImpotExcel = () => {
       console.log();
       let customHeader = new Headers();
       customHeader.append("authorization", `Basic ${userPass}`);
-      customHeader.append("dataType", "json");
+      customHeader.append("Access-Control-Allow-Origin", "*");
+      customHeader.append(
+        "Access-Control-Allow-Methods",
+        "GET, POST, PUT, OPTIONS"
+      );
+      customHeader.append("Access-Control-Allow-Headers", "X-Custom-Header");
+      customHeader.append("Access-Control-Max-Age", "86400");
+      customHeader.append("Access-Control-Credentials", "true");
+      customHeader.append("Pragma", "no-cache");
+      customHeader.append("Expires", "Thu, 01 Jan 1970 00:00:00 GMT");
+      customHeader.append(
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate"
+      );
+      customHeader.append("Content-Type", "application/json");
+      customHeader.append("Transfer-Encoding", "chunked");
+      customHeader.append("Date", "Tue, 13 Dec 2022 20:08:59 GMT");
+      /* customHeader.append("dataType", "json");
       customHeader.append("Content-Type", "30099");
       customHeader.append("Accept", "application/json");
       customHeader.append("Content-Type", "application/json; charset=utf-8");
@@ -75,16 +93,40 @@ const ImpotExcel = () => {
       customHeader.append(
         "Access-Control-Allow-Methods",
         "DELETE, POST, GET, OPTIONS"
-      );
-      //  customHeader.append("Access-Control-Allow-Headers", "X-Requested-With");
+      ); */
+      /* customHeader.append("Access-Control-Allow-Headers", "X-Requested-With");
 
-      // console.table(customHeader);
+      console.table(customHeader);
+ */
 
-      fetch(
+      let axiosConfig = {
+        Authorization: `Basic ${userPass}`,
+        "Access-Control-Allow-Origin":'*',
+        headers: {
+          Accept: "application/json;charset=utf-8",
+        },
+      };
+      console.log(rows)
+      axios
+        .post(
+          "http://app.amdmconsultora.com:80/amdm/servlet/ImportacionClienteOfidirectWs",
+          JSON.stringify(rows),
+          {"headers" : customHeader}
+        )
+        .then((res) => {
+          console.log("RESPONSE RECEIVED: ", res);
+          console.log(res.data[0]);
+        })
+        .catch((err) => {
+          console.log("AXIOS ERROR: ", err);
+          console.log(err.config.data);
+        });
+      /* fetch(
         "http://app.amdmconsultora.com:80/amdm/servlet/ImportacionClienteOfidirectWs",
         {
-          customHeader,
-          /*  headers: {
+          mode: 'no-cors',
+          customHeader, */
+      /* headers: {
             "Authorization":`Basic `+userPass,
             'Accept': 'application/json, text/plain,',
             'Content-Type': 'application/json; charset=utf-8',
@@ -92,10 +134,36 @@ const ImpotExcel = () => {
             "Access-Control-Allow-Origin":"*",
             "Access-Control-Allow-Origin":"http://localhost:5173/ImportarDesdeExcel",
             "Access-Control-Allow-Methods":"DELETE, POST, GET, OPTIONS"
-          }, */
-          method: "POST",
-          body: rows,
-          /*    headers: {
+          },  */
+      /*   method: "POST",
+          body: JSON.stringify({
+            idTransaccion:"15",
+            idCliente:"idOfidirect",
+            remito:"20225",
+            fecha:"2022-10-01 00:00:00",
+            nombreDestinatario:"Bosack Federico",
+            calleDestino:"Garibaldi",
+            nroCalleDestino:"186",
+            Observaciones:"Piso: Dto:2",
+            observacionesAdicionalesDestino:"-",
+            localidadDestino:"Villa Carlos Paz",
+            codigoPostalDestino:"5152",
+            telefono1:"3513070584",
+            telefono2:"-",
+            telefono3:"-",
+            correoDestinatario:"sadorno97@gmail.com",
+            cantUnidades:"-",
+            cantM3:"5",
+            cantKg:"9",
+            cantValorDeclarado:"3305",
+            contrareembolso:"-",
+            latitud:"-",
+            longitud:"-",
+            observaciones:"-",
+            direccionAlternativa:"-",
+            provinciaDestino:"-"
+         }), */
+      /*    headers: {
           "Authorization":`Basic ${userPass}`,
           "Access-Control-Allow-Credentials":"true",
           "Access-Control-Allow-Methods":"GET, POST, PUT, OPTIONS",
@@ -104,8 +172,8 @@ const ImpotExcel = () => {
           "Content-Type": "application/json",
            'Access-Control-Allow-Origin': '*'
         },  */
-          /* body: JSON.stringify(rows), */
-        }
+      /* body: JSON.stringify(rows), */
+      /*   }
       )
         .then((res) => {
           console.log(res)
@@ -116,7 +184,7 @@ const ImpotExcel = () => {
           console.log("entro en el eror" + err);
           console.log(err);
           throw err;
-        });
+        }); */
     } catch (error) {
       console.log("acaaaa");
       console.dir("ksnd" + error);
@@ -142,7 +210,7 @@ const ImpotExcel = () => {
           ...dato,
 
           idTransaccion: String(dato.idTransaccion || "-"),
-          idCliente: String(dato.idCliente || "-"),
+          idCliente: "idOfidirect",
           remito: String(dato.remito || "-"),
 
           fecha: String(
@@ -153,10 +221,10 @@ const ImpotExcel = () => {
               .join(" ")
           ),
           nombreDestinatario: String(dato.nombreDestinatario || "-"),
-          calleDestino: String(dato.calleDestino) || "-",
+          calleDestino: String(dato.calleDestino),
           nroCalleDestino: String(dato.nroCalleDestino) || "-",
           codigoPostalDestino: String(dato.codigoPostalDestino || "-"),
-          Observaciones: String(dato.Observaciones || "-"),
+          observaciones: String(dato.observaciones || "-"),
           observacionesAdicionalesDestino: String(
             dato.observacionesAdicionalesDestino || "-"
           ),
@@ -175,7 +243,7 @@ const ImpotExcel = () => {
           latitud: String(dato.latitud || "-"),
           longitud: String(dato.longitud || "-"),
         });
-      } else {
+      } /* else {
         jsonData.push({
           ...dato,
           idTransaccion: String(dato.idTransaccion || "-"),
@@ -204,7 +272,7 @@ const ImpotExcel = () => {
           latitud: String(dato.latitud || "-"),
           longitud: String(dato.longitud || "-"),
         });
-      }
+      } */
     }
 
     //setRows(JSON.stringify(jsonData));
@@ -263,12 +331,14 @@ const ImpotExcel = () => {
 
       <table className="table table-striped">
         <thead>
-          <tr>
-            <th scope="col">Cant</th>
-            {header?.map((item) => (
-              <th scope="col">{item}</th>
-            ))}
-          </tr>
+          {
+            <tr>
+              <th scope="col">Cant</th>
+              {header?.map((item) => (
+                <th scope="col">{item}</th>
+              ))}
+            </tr>
+          }
         </thead>
         <tbody className="table-striped">
           {rows?.map((e, index, array) => {
