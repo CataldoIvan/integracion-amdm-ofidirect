@@ -5,4 +5,24 @@
 }
 .navbar a,img{
     margin: 0 30px;
+    text-decoration: none;
+
+}
+
+.navbar a{
+    padding: 24px;
+    color: #1b1b1b;
+}
+
+.navbar a:link, a:visited,  a:hover, a:active{
+    text-decoration: none;
+    color: #1b1b1b;
+}
+.active{
+    text-decoration: none;
+    border-bottom: solid;
+    border-bottom-color: #E89F1B;
+    color: #1b1b1b;
+    
+
 }

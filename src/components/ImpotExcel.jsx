@@ -74,7 +74,11 @@ const ImpotExcel = () => {
                 console.log(res.data[0]);
                 toast.success(`creado correctamente! Remito: ${res.data[0].idTransaccion}`,{
                duration: 4000,
-               position: 'top-right'});
+               position: 'top-right'
+              ,style: {
+                padding: '10px 60px',
+              }
+              });
                localStorage.setItem(res.data[0].idTransaccion,res.data[0].mensaje)
               })
               .catch((err) => {
@@ -87,9 +91,14 @@ const ImpotExcel = () => {
                 );
                 
                 localStorage.setItem(err.response.data[0].idTransaccion,err.response.data[0].mensaje)
-                toast.error(`Hubo un error :( , Remmito:${err.response.data[0].idTransaccion}`,{
+                toast.error(`Hubo un error 😔,Remmito:${err.response.data[0].idTransaccion}`,{
                   duration: 4000,
-                  position: 'top-right'});
+                  position: 'top-right'
+                  ,style: {
+                    padding: '10px 60px',
+                  }}
+                  
+                  );
                 
               })
           };
@@ -205,7 +214,7 @@ const ImpotExcel = () => {
       </select>
           {rows?
           <>
-          <button className="btn btn-success" onClick={handleSend}>enviar</button>
+          <button className="btn btn-success" onClick={handleSend}>Enviar</button>
           <button
         className="btn btn-danger"
         onClick={(e) => {

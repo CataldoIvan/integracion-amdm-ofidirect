@@ -20,24 +20,38 @@ const ResultadosDeEnvios = () => {
   }, []);
   return (
     <>
-     <button
+      <button
         className="btn btn-danger cleanNot"
         onClick={(e) => {
-         localStorage.clear()
-         setList([])
+          localStorage.clear();
+          setList([]);
         }}
       >
-        Limpiar Notificaciones
+        Limpiar resultados
       </button>
       <br />
-      {list?.map((item) => {
-        console.log(window.localStorage.key(19));
-        return (
-          <h4>
-            Remito: {item} : Motivo: {localStorage.getItem(item)}
-          </h4>
-        );
-      })}
+
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Estado</th>
+            <th scope="col">Remito</th>
+
+            <th scope="col">Mensaje</th>
+          </tr>
+        </thead>
+        <tbody className="table-striped">
+          {list?.map((item) => {
+            return (
+              <tr>
+                <td scope="col">{localStorage.getItem(item)=="Procesado"?"✅":"❌"}</td>
+                <td scope="col">{item}</td>
+                <td scope="col">{localStorage.getItem(item)}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </>
   );
 };
