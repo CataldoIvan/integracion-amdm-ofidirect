@@ -1,0 +1,14 @@
+.btn{
+    width: 100px;
+    margin: 0 30px;
+}
+
+.form-control{
+    margin: 10px 0;
+    display: inline-block!important;
+    width: 250px!important;
+}
+
+.cleanNot{
+    width: 200px;
+}

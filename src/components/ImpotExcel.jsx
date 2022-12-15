@@ -4,6 +4,7 @@ import { json } from "react-router-dom";
 import axios, { isCancel, AxiosError } from "axios";
 import * as XLSX from "xlsx";
 import toast, { Toaster } from 'react-hot-toast';
+import './ImpotExcel.css'
 
 const ImpotExcel = () => {
   const [namesOfSheets, setNamesOfSheets] = useState([]);
@@ -72,12 +73,12 @@ const ImpotExcel = () => {
                 console.log("RESPONSE RECEIVED: ", res);
                 console.log(res.data[0]);
                 toast.success(`creado correctamente! Remito: ${res.data[0].idTransaccion}`,{
-               duration: 3000,
-               position: 'bottom-right'});
+               duration: 4000,
+               position: 'top-right'});
                localStorage.setItem(res.data[0].idTransaccion,res.data[0].mensaje)
               })
               .catch((err) => {
-                // console.log("AXIOS ERROR: ", err);
+                 console.log("AXIOS ERROR: ", err);
                 console.log(
                   "el Remito:",
                   err.response.data[0].idTransaccion,
@@ -87,8 +88,8 @@ const ImpotExcel = () => {
                 
                 localStorage.setItem(err.response.data[0].idTransaccion,err.response.data[0].mensaje)
                 toast.error(`Hubo un error :( , Remmito:${err.response.data[0].idTransaccion}`,{
-                  duration: 3000,
-                  position: 'bottom-right'});
+                  duration: 4000,
+                  position: 'top-right'});
                 
               })
           };
@@ -180,7 +181,32 @@ const ImpotExcel = () => {
   const notify  = () => toast('Here is your toast.');
   return (
     <div className="content">
-      <button
+      
+      <br />
+      <input
+        className=""
+        id="input"
+        type="file"
+        accept=".xls,.xlsx"
+        onChange={handleFile}
+      />
+      
+      <select
+        className="form-control"
+        defaultValue={sheetSelected}
+        onChange={handleSelect}
+      >
+        <option selected>Selecciona una Hoja</option>
+        {namesOfSheets?.map((option, index) => (
+          <option key={index} defaultValue={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+          {rows?
+          <>
+          <button className="btn btn-success" onClick={handleSend}>enviar</button>
+          <button
         className="btn btn-danger"
         onClick={(e) => {
           setNamesOfSheets();
@@ -194,28 +220,9 @@ const ImpotExcel = () => {
       >
         Limpiar
       </button>
-      <br />
-      <input
-        className="btn btn-secondary"
-        id="input"
-        type="file"
-        accept=".xls,.xlsx"
-        onChange={handleFile}
-      />
-      <button onClick={handleSend}>enviar</button>
-      <select
-        className="form-control"
-        defaultValue={sheetSelected}
-        onChange={handleSelect}
-      >
-        <option selected>Selecciona una Hoja</option>
-        {namesOfSheets?.map((option, index) => (
-          <option key={index} defaultValue={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-
+          </>
+      :null
+    }
       <table className="table table-striped">
         <thead>
           {

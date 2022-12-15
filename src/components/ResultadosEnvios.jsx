@@ -21,7 +21,7 @@ const ResultadosDeEnvios = () => {
   return (
     <>
      <button
-        className="btn btn-danger"
+        className="btn btn-danger cleanNot"
         onClick={(e) => {
          localStorage.clear()
          setList([])
