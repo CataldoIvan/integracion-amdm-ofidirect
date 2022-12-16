@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 const ResultadosDeEnvios = () => {
   const [list, setList] = useState([]);
+  const [filter,setFilter]=useState("todos")
   let nueva = null;
   useEffect(() => {
     nueva = [];
@@ -10,16 +11,20 @@ const ResultadosDeEnvios = () => {
       //console.log(localStorage.key(i));
       nueva.push(window.localStorage.key(i));
     }
-    setList(nueva);
-    console.log(nueva.length);
+
+    setList(nueva.map((i) => parseInt(i)).sort((a, b) => b - a));
+    console.log(list);
   }, []);
 
-  useEffect(() => {
-    console.log("prueba");
-    setList(nueva);
-  }, []);
+  const handleSelect=(e)=>{
+    e.preventDefault()
+    console.log(e.target.selectedOptions[0].value);
+    setFilter(e.target.selectedOptions[0].value)
+  }
   return (
     <>
+    {list.length!=0?<div>
+
       <button
         className="btn btn-danger cleanNot"
         onClick={(e) => {
@@ -29,8 +34,19 @@ const ResultadosDeEnvios = () => {
       >
         Limpiar resultados
       </button>
-      <br />
+      
+      <select className="form-control" onChange={handleSelect}>
+        <option  value={'todos'} >Todos los resultados</option>
 
+        <option value={'procesados'} >✅ Precesados</option>
+        <option value={'errores'}>❌ Errores</option>
+      </select>
+    </div>:
+    <h4 >
+
+      No hay resultados de envio aun
+    </h4>
+    }
       <table className="table table-striped">
         <thead>
           <tr>
@@ -42,13 +58,37 @@ const ResultadosDeEnvios = () => {
         </thead>
         <tbody className="table-striped">
           {list?.map((item) => {
-            return (
-              <tr>
-                <td scope="col">{localStorage.getItem(item)=="Procesado"?"✅":"❌"}</td>
-                <td scope="col">{item}</td>
-                <td scope="col">{localStorage.getItem(item)}</td>
-              </tr>
-            );
+            if(filter=='todos'){
+              return (
+                  <tr>
+                    <td scope="col">
+                      {localStorage.getItem(item) == "Procesado" ? "✅" : "❌"}
+                    </td>
+                    <td scope="col">{item}</td>
+                    <td scope="col">{localStorage.getItem(item)}</td>
+                  </tr>
+                );
+            }else if(filter=='procesados' && localStorage.getItem(item) == "Procesado"){
+              return (
+                <tr>
+                  <td scope="col">
+                    {localStorage.getItem(item) == "Procesado" ? "✅" : "❌"}
+                  </td>
+                  <td scope="col">{item}</td>
+                  <td scope="col">{localStorage.getItem(item)}</td>
+                </tr>
+              );
+            }else if(filter=='errores' && localStorage.getItem(item) != "Procesado"){
+              return (
+                <tr>
+                  <td scope="col">
+                    {localStorage.getItem(item) == "Procesado" ? "✅" : "❌"}
+                  </td>
+                  <td scope="col">{item}</td>
+                  <td scope="col">{localStorage.getItem(item)}</td>
+                </tr>
+              );
+            }
           })}
         </tbody>
       </table>
