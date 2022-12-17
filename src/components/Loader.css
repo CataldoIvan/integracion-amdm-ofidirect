@@ -1,0 +1,58 @@
+.backLoader{
+    border-radius: 10px;
+    padding: 10%;
+    background-color:#d5d5d5; filter:alpha(opacity=60); opacity:.6;
+    position: absolute;
+    top: 26%;
+    left: 30%;
+}
+.loader{
+    font-size: 38px;
+    color: rgb(0, 0, 0);
+    display: inline-block;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    display: flex;    
+   
+   
+    
+  }
+  .loader:after{
+    content: 'Enviando...';
+    position: relative;
+    z-index: 5;
+  }
+  .loader:before{
+    content: '';
+    height: 12px;
+    border: 1px solid;
+    border-radius: 10px;
+    width: 50%;
+    position: absolute;
+    bottom: 93px;
+    background: linear-gradient(#FF3D00 100%, transparent 0) no-repeat;
+    background-size: 0% auto;
+    animation: 10s lineGrow linear infinite;
+    left: 24%;
+    /* top: 0; */
+  }
+  @media (max-width: 1200px) {
+    .backLoader{
+        left: 30%;
+    }
+  }
+   @media (max-width: 768) {
+    .backLoader{
+        left: 62%;
+    }
+    .loader:before {
+       
+        width: 67%;
+        position: absolute;
+        bottom: 69px;
+       
+        left: 12%;
+        /* top: 0; */
+    }
+  }
+  @keyframes lineGrow {to {  background-size: 100% auto}}

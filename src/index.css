@@ -12,9 +12,7 @@
 body {
   margin: 0;
   display: flex;
-  
-  
   min-height: 100vh;
-  min-width: 700px;
+  min-width: 900px;
 }
 

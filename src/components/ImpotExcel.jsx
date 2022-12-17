@@ -3,20 +3,20 @@ import { useEffect } from "react";
 import { json } from "react-router-dom";
 import axios, { isCancel, AxiosError } from "axios";
 import * as XLSX from "xlsx";
-import toast, { Toaster } from 'react-hot-toast';
-import './ImpotExcel.css'
+import toast, { Toaster } from "react-hot-toast";
+import "./ImpotExcel.css";
+import Loader from "./Loader";
 
 const ImpotExcel = () => {
   const [namesOfSheets, setNamesOfSheets] = useState([]);
   const [sheetSelected, setSheetSelected] = useState();
   const [tableData, setTableData] = useState([]);
-  const [columns, setColumns] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState(null);
   const [header, setHeader] = useState(null);
   const [excel, setExcel] = useState();
   const [errores, setErrores] = useState([]);
   const [confir, setConfir] = useState({});
-  
 
   useEffect(() => {
     console.log(rows);
@@ -30,7 +30,11 @@ const ImpotExcel = () => {
 
   const handleSend = (e) => {
     e.preventDefault();
-    
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
     console.log(JSON.stringify(rows));
     try {
       let userPass = btoa("191918:fw3vLr&lLVER");
@@ -62,7 +66,6 @@ const ImpotExcel = () => {
       for (var i = 0; i <= rows.length - 1; i++) {
         var tick = function (i) {
           return function () {
-           
             axios
               .post(
                 "http://app.amdmconsultora.com:80/amdm/servlet/ImportacionClienteOfidirectWs",
@@ -72,51 +75,58 @@ const ImpotExcel = () => {
               .then((res) => {
                 console.log("RESPONSE RECEIVED: ", res);
                 console.log(res.data[0]);
-                toast.success(`creado correctamente! Remito: ${res.data[0].idTransaccion}`,{
-               duration: 4000,
-               position: 'top-right'
-              ,style: {
-                padding: '10px 60px',
-              }
-              });
-               localStorage.setItem(res.data[0].idTransaccion,res.data[0].mensaje)
+                toast.success(
+                  `creado correctamente! Remito: ${res.data[0].idTransaccion}`,
+                  {
+                    duration: 4000,
+                    position: "top-right",
+                    style: {
+                      padding: "10px 60px",
+                    },
+                  }
+                );
+                localStorage.setItem(
+                  res.data[0].idTransaccion,
+                  res.data[0].mensaje
+                );
               })
+
               .catch((err) => {
-                 console.log("AXIOS ERROR: ", err);
+                console.log("AXIOS ERROR: ", err);
                 console.log(
                   "el Remito:",
                   err.response.data[0].idTransaccion,
                   " Tiene el error:",
                   err.response.data[0].mensaje
                 );
-                
-                localStorage.setItem(err.response.data[0].idTransaccion,err.response.data[0].mensaje)
-                toast.error(`Hubo un error 😔,Remmito:${err.response.data[0].idTransaccion}`,{
-                  duration: 4000,
-                  position: 'top-right'
-                  ,style: {
-                    padding: '10px 60px',
-                  }}
-                  
-                  );
-                
-              })
+
+                localStorage.setItem(
+                  err.response.data[0].idTransaccion,
+                  err.response.data[0].mensaje
+                );
+                toast.error(
+                  `Hubo un error 😔,Remmito:${err.response.data[0].idTransaccion}`,
+                  {
+                    duration: 4000,
+                    position: "top-right",
+                    style: {
+                      padding: "10px 60px",
+                    },
+                  }
+                );
+              });
           };
         };
         setTimeout(tick(i), 2000 * i);
       }
-      
-
-    
     } catch (error) {
       console.log("acaaaa");
       console.dir("ksnd" + error);
     }
   };
-  
+
   const handleSelect = (e) => {
     setSheetSelected(e.target.value);
-    
 
     const data = XLSX.utils.sheet_to_json(excel.Sheets[e.target.value], {
       defval: null,
@@ -187,9 +197,10 @@ const ImpotExcel = () => {
     setExcel(res);
     setNamesOfSheets(res.SheetNames);
   };
-  const notify  = () => toast('Here is your toast.');
+  const notify = () => toast("Here is your toast.");
   return (
     <div className="content">
+      {loading ? <Loader /> : null}
       
       <br />
       <input
@@ -199,7 +210,7 @@ const ImpotExcel = () => {
         accept=".xls,.xlsx"
         onChange={handleFile}
       />
-      
+
       <select
         className="form-control"
         defaultValue={sheetSelected}
@@ -212,26 +223,28 @@ const ImpotExcel = () => {
           </option>
         ))}
       </select>
-          {rows?
-          <>
-          <button className="btn btn-success" onClick={handleSend}>Enviar</button>
+      {rows ? (
+        <>
+          <button className="btn btn-success" onClick={handleSend}>
+            Enviar
+          </button>
           <button
-        className="btn btn-danger"
-        onClick={(e) => {
-          setNamesOfSheets();
-          document.querySelector("#input").value = "";
-          setColumns();
-          setRows();
-          setExcel();
-          setHeader();
-          setErrores();
-        }}
-      >
-        Limpiar
-      </button>
-          </>
-      :null
-    }
+            className="btn btn-danger"
+            onClick={(e) => {
+              setNamesOfSheets();
+              document.querySelector("#input").value = "";
+              setColumns();
+              setRows();
+              setExcel();
+              setHeader();
+              setErrores();
+            }}
+          >
+            Limpiar
+          </button>
+        </>
+      ) : null}
+
       <table className="table table-striped">
         <thead>
           {
