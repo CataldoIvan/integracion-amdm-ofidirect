@@ -13,9 +13,10 @@ function App() {
     <div className="App">
       <Navbar/>
       <Routes>
-        <Route path="/" element={<Home/>} />
-        <Route path="/ImportarDesdeExcel" element={<ImpotExcel/>} />
-        <Route path="/ResultadosDeEnvios" element={<ResultadosDeEnvios/>} />
+        <Route path="/integracion-amdm-ofidirect/" element={<Home/>} />
+        <Route path="/integracion-amdm-ofidirect/ImportarDesdeExcel" element={<ImpotExcel/>} />
+        <Route path="/integracion-amdm-ofidirect/ResultadosDeEnvios" element={<ResultadosDeEnvios/>} />
+        <Route path="*" element={<Home/>} />
       </Routes>
       
     </div>

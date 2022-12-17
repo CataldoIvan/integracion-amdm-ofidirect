@@ -14,17 +14,17 @@ const Navbar = () => {
             className={`${active === "home" ? 'navbarItem active' : 'navbarItem'}`} onClick={(e) => {
                 console.log(e.target)
                 setActive("home")}}
-            to="/">Home</Link>
+            to="/integracion-amdm-ofidirect/">Home</Link>
             <Link
             className={`${active === "importar" ? 'navbarItem active' : 'navbarItem'}`} onClick={(e) =>{
                 console.log(e.target) 
                 setActive("importar")}}
-              to="/ImportarDesdeExcel">Importar desde Excel</Link>
+              to="/integracion-amdm-ofidirect/ImportarDesdeExcel">Importar desde Excel</Link>
             <Link 
             className={`${active === "result" ? 'navbarItem active' : 'navbarItem'}`} onClick={(e) =>{
                 console.log(e.target)
                  setActive("result")}}
-             to="/ResultadosDeEnvios">Detalle de resultados de envios</Link>
+             to="/integracion-amdm-ofidirect/ResultadosDeEnvios">Detalle de resultados de envios</Link>
             <hr />
         </div>
     );
