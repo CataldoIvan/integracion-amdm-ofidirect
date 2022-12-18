@@ -87,7 +87,7 @@ const ImpotExcel = () => {
                 );
                 localStorage.setItem(
                   res.data[0].idTransaccion,
-                  res.data[0].mensaje
+                  res.data[0].mensaje+" fecha: "+new Date().toLocaleDateString()
                 );
               })
 
@@ -102,7 +102,7 @@ const ImpotExcel = () => {
 
                 localStorage.setItem(
                   err.response.data[0].idTransaccion,
-                  err.response.data[0].mensaje
+                  err.response.data[0].mensaje+" fecha: "+new Date().toLocaleDateString()
                 );
                 toast.error(
                   `Hubo un error 😔,Remmito:${err.response.data[0].idTransaccion}`,

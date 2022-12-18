@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useEffect } from "react";
 import './ResultadosDeEnvios.css'
 import toast, { Toaster } from 'react-hot-toast';
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+
 const ResultadosDeEnvios = () => {
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState("todos");
@@ -89,14 +91,26 @@ const ResultadosDeEnvios = () => {
             }}
           />
           <button className="btn btn-info " onClick={handleSearch}>{buttonSearch?"Buscar":"Traer todos"}</button>
+         <ReactHTMLTableToExcel
+                    id="test-table-xls-button"
+                    className="download-table-xls-button"
+                    table="envios"
+                    filename="Envios a AMDM"
+                    sheet="Envios"
+                    buttonText="📥"
+                   
+                    />
+          
+                     
         </div>
       ) : (
         <h4 style={{textAlign:"center"}}>No hay resultados de envio aun</h4>
       )}
-      <table className="table table-striped">
+      <table className="table table-striped" id="envios">
         <thead>
           <tr>
             <th scope="col">Estado</th>
+            <th scope="col">Fecha Envio</th>
             <th scope="col">Remito</th>
 
             <th scope="col">Mensaje</th>
@@ -105,39 +119,43 @@ const ResultadosDeEnvios = () => {
         <tbody className="table-striped">
           {list?.map((item) => {
             if (filter == "todos") {
+              {console.log(localStorage.getItem(item).slice(0,-18));}
               return (
                 <tr>
                   <td scope="col">
-                    {localStorage.getItem(item) == "Procesado" ? "✅" : "❌"}
+                    {localStorage.getItem(item).slice(0,-18) == "Procesado" ? "✅" : "❌"}
                   </td>
+                  <td scope="col">{localStorage.getItem(item).slice(-10)}</td>
                   <td scope="col">{item}</td>
-                  <td scope="col">{localStorage.getItem(item)}</td>
+                  <td scope="col">{localStorage.getItem(item).slice(0,-17)}</td>
                 </tr>
               );
             } else if (
               filter == "procesados" &&
-              localStorage.getItem(item) == "Procesado"
+              localStorage.getItem(item).slice(0,-18) == "Procesado"
             ) {
               return (
                 <tr>
                   <td scope="col">
-                    {localStorage.getItem(item) == "Procesado" ? "✅" : "❌"}
+                    {localStorage.getItem(item).slice(0,-18) == "Procesado" ? "✅" : "❌"}
                   </td>
+                  <td scope="col">{localStorage.getItem(item).slice(-10)}</td>
                   <td scope="col">{item}</td>
-                  <td scope="col">{localStorage.getItem(item)}</td>
+                  <td scope="col">{localStorage.getItem(item).slice(0,-18)}</td>
                 </tr>
               );
             } else if (
               filter == "errores" &&
-              localStorage.getItem(item) != "Procesado"
+              localStorage.getItem(item).slice(0,-18) != "Procesado"
             ) {
               return (
                 <tr>
                   <td scope="col">
-                    {localStorage.getItem(item) == "Procesado" ? "✅" : "❌"}
+                    {localStorage.getItem(item).slice(0,-18) == "Procesado" ? "✅" : "❌"}
                   </td>
+                  <td scope="col">{localStorage.getItem(item).slice(-10)}</td>
                   <td scope="col">{item}</td>
-                  <td scope="col">{localStorage.getItem(item)}</td>
+                  <td scope="col">{localStorage.getItem(item).slice(0,-18)}</td>
                 </tr>
               );
             }
