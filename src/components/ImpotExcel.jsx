@@ -86,7 +86,7 @@ const ImpotExcel = () => {
                   }
                 );
                 localStorage.setItem(
-                  res.data[0].idTransaccion,
+                  res.data[0].idTransaccion?res.data[0].idTransaccion:new Date().getMilliseconds(),
                   res.data[0].mensaje+" fecha: "+new Date().toLocaleDateString()
                 );
               })
@@ -233,8 +233,8 @@ const ImpotExcel = () => {
             onClick={(e) => {
               setNamesOfSheets();
               document.querySelector("#input").value = "";
-              setColumns();
-              setRows();
+              //setColumns();
+              setRows(null);
               setExcel();
               setHeader();
               setErrores();

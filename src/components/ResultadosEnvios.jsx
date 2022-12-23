@@ -79,7 +79,7 @@ const ResultadosDeEnvios = () => {
 
           <input
             type="text"
-            class="form-control inputSearch"
+            className="form-control inputSearch"
             placeholder="Buscar un remito"
             aria-label="Buscar un remito"
             aria-describedby="basic-addon2"
@@ -119,15 +119,15 @@ const ResultadosDeEnvios = () => {
         <tbody className="table-striped">
           {list?.map((item) => {
             if (filter == "todos") {
-              {console.log(localStorage.getItem(item).slice(0,-18));}
+              {console.log(localStorage.getItem(item)?.slice(0,-18));}
               return (
                 <tr>
                   <td scope="col">
-                    {localStorage.getItem(item).slice(0,-18) == "Procesado" ? "✅" : "❌"}
+                    {localStorage.getItem(item)?.slice(0,-18) == "Procesado" ? "✅" : "❌"}
                   </td>
-                  <td scope="col">{localStorage.getItem(item).slice(-10)}</td>
-                  <td scope="col">{item}</td>
-                  <td scope="col">{localStorage.getItem(item).slice(0,-17)}</td>
+                  <td scope="col">{localStorage.getItem(item)?localStorage.getItem(item).slice(-10):"Error"}</td>
+                  <td scope="col">{item?item:"Error"}</td>
+                  <td scope="col">{localStorage.getItem(item)?localStorage.getItem(item).slice(0,-17):"Error Mirar consola"}</td>
                 </tr>
               );
             } else if (
